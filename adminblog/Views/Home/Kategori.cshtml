@@ -1,0 +1,89 @@
+
+@model IEnumerable<adminblog.Models.Kategori>
+
+@{
+    ViewData["Title"] = "Kategori";
+}
+
+<button type="button" onclick="$('#KategoriModal').modal('show')" class="btn btn-primary">Kategori Ekle</button>
+
+<table class="table table-hover">
+    <thead>
+        <th scope="col">Id</th>
+        <th scope="col">KategoriAdi</th>
+        <th scope="col">SiraNo</th>
+        <th scope="col"></th>
+    </thead>
+
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+            <th scope="row">@item.Id</th>
+            <td>@item.KategoriAdi</td>
+            <td>@item.SiraNo</td>
+            <td><a class="btn btn-danger" asp-route-id="@item.Id" asp-action="KategoriSil">Sil</a>
+                <button class="btn btn-secondary" onclick="updateForm(@item.Id)" type="button">Guncelle</button>
+            </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="KategoriModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Kategori Ekle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/Home/KategoriEkle" autocomplete="off">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="hidden" name="Id" id="Id" class="form-control">
+                        <input type="text" name="KategoriAdi" id="KategoriAdi" class="form-control" placeholder="Kategori adini giriniz:">
+                        <input type="number" name="SiraNo" id="SiraNo" class="form-control" placeholder="Sira no giriniz:">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="clearform()" data-dismiss="modal">Kapat</button>
+                    <button type="submit" id="kaydet" class="btn btn-primary">Ekle</button>
+                    <button type="submit" id="guncelle" class="btn btn-primary">Guncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{ 
+<script>
+    $(() => clearform())
+    function updateForm(Id) {
+        fetch('/Home/KategoriDetay?Id=' + Id)
+            .then(res => res.json())
+            .then(res => {
+                $('#Id').val(res.id)
+                $('#KategoriAdi').val(res.kategoriadi)
+                $('#SiraNo').val(res.sirano)
+            })
+
+        $('#kaydet').hide();
+        $('#guncelle').show();
+        $('#KategoriModal').modal('show');
+        
+    }
+
+    function clearform() {
+
+        
+        $('#Id').val(null)
+        $('#KategoriAdi').val(null)
+        $('#SiraNo').val(null)
+        $('#kaydet').show();
+        $('#guncelle').hide();
+
+    }
+</script>
+}

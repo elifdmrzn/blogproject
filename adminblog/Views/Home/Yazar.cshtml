@@ -1,0 +1,119 @@
+﻿
+@model IEnumerable<adminblog.Models.Yazar>
+
+@{
+    ViewData["Title"] = "Yazar";
+}
+
+<button type="button" onclick="$('#YazarModal').modal('show')" class="btn btn-primary">Yazar Ekle</button>
+
+<table class="table table-hover">
+    <thead>
+    <th scope="col">Id</th>
+    <th scope="col">YazarAdi</th>
+    <th scope="col">Soyadi</th>
+    <th scope="col">Email</th>
+    <th scope="col">Parola</th>
+    <th scope="col"></th>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Ad</td>
+                <td>@item.Soyad</td>
+                <td>@item.Email</td>
+                <td>@item.Sifre</td>
+
+                <td>
+                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="YazarSil">Sil</a>
+                    <button class="btn btn-secondary" onclick="updateForm(@item.Id)" type="button">Guncelle</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="YazarModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yazar Ekle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/Home/YazarEkle" autocomplete="off">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="hidden" name="Id" id="Id" class="form-control">
+                        <input type="text" name="Ad" id="Ad" class="form-control" placeholder="Yazar adi:">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <input type="text" name="Soyad" id="Soyad" class="form-control" placeholder="Soyadi:">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <input type="email" name="Email" id="Email" class="form-control" placeholder="email:">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <input type="password" name="Sifre" id="Sifre" class="form-control" placeholder="parola:">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="clearform()" data-dismiss="modal">Kapat</button>
+                    <button type="submit" id="kaydet" class="btn btn-primary">Ekle</button>
+                    <button type="submit" id="guncelle" class="btn btn-primary">Guncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+    $(() => clearform())
+    function updateForm(Id) {
+        fetch('/Home/YazarDetay?Id=' + Id)
+            .then(res => res.json())
+            .then(res => {
+                $('#Id').val(res.id)
+                $('#Ad').val(res.ad)
+                $('#Soyad').val(res.soyad)
+                $('#Email').val(res.email)
+                $('#Sifre').val(res.sifre)
+            })
+
+        $('#kaydet').hide();
+        $('#guncelle').show();
+        $('#YazarModal').modal('show');
+
+    }
+
+    function clearform() {
+
+
+        $('#Id').val(null)
+        $('#Ad').val(null)
+        $('#Soyad').val(null)
+        $('#Email').val(null)
+        $('#Sifre').val(null)
+        
+        $('#kaydet').show();
+        $('#guncelle').hide();
+
+    }
+    </script>
+}

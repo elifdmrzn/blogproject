@@ -1,0 +1,45 @@
+﻿
+@model IEnumerable<adminblog.Models.Blog>
+
+@{
+    ViewData["Title"] = "Yazar";
+}
+
+
+
+<table class="table table-hover">
+    <thead>
+    <th scope="col">Id</th>
+    <th scope="col">YazarAdi</th>
+    <th scope="col"></th>
+    </thead>
+
+    <tbody>
+        <a href="/Blog/Blog" class="btn btn-success">Blog Ekle</a>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.BlogAdi</td>
+                
+
+                <td>
+
+                    @if (item.Yayin)
+                    {
+                        <a class="btn btn-success">Yayinlandi</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-light" asp-route-id="@item.Id" asp-action="Yayin">Yayinla</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+     
+
